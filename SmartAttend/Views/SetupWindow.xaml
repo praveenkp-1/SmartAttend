@@ -1,0 +1,273 @@
+﻿<Window x:Class="SmartAttend.SetupWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:SmartAttend"
+        mc:Ignorable="d"
+        Icon="C:\Users\kp\Desktop\smartAttendanceSystem-master\SmartAttend\Assets\smartattend.ico"
+        Title="SmartAttend — First Time Setup"
+        Height="620"
+        Width="420"
+        WindowStartupLocation="CenterScreen"
+        ResizeMode="NoResize"
+        Background="#EEF3FA">
+    <Grid>
+
+        <!-- ScrollViewer is the ROOT so entire page scrolls -->
+        <ScrollViewer VerticalScrollBarVisibility="Hidden"
+                      HorizontalScrollBarVisibility="Disabled">
+
+            <Border Background="#FFFFFF"
+                    CornerRadius="16"
+                    BorderThickness="1"
+                    BorderBrush="#D8E4F0"
+                    Width="340"
+                    HorizontalAlignment="Center"
+                    Padding="32"
+                    Margin="0 32">
+
+                <StackPanel>
+
+                    <!-- Logo -->
+                    <Border Width="56"
+                            Height="56"
+                            CornerRadius="14"
+                            Background="#EEF3FA"
+                            BorderThickness="1"
+                            BorderBrush="#D8E4F0"
+                            HorizontalAlignment="Center"
+                            Margin="0 0 0 14">
+                        <Grid>
+                            <Grid.RowDefinitions>
+                                <RowDefinition />
+                                <RowDefinition />
+                            </Grid.RowDefinitions>
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition />
+                                <ColumnDefinition />
+                            </Grid.ColumnDefinitions>
+                            <Border Grid.Row="0"
+                                    Grid.Column="0"
+                                    Background="#1A3A6B"
+                                    Margin="8 8 4 4"
+                                    CornerRadius="3" />
+                            <Border Grid.Row="0"
+                                    Grid.Column="1"
+                                    Background="#1A3A6B"
+                                    Margin="4 8 8 4"
+                                    CornerRadius="3" />
+                            <Border Grid.Row="1"
+                                    Grid.Column="0"
+                                    Background="#1A3A6B"
+                                    Margin="8 4 4 8"
+                                    CornerRadius="3" />
+                            <Border Grid.Row="1"
+                                    Grid.Column="1"
+                                    Background="#378ADD"
+                                    Margin="4 4 8 8"
+                                    CornerRadius="3" />
+                        </Grid>
+                    </Border>
+
+                    <!-- Title -->
+                    <TextBlock Text="Welcome to SmartAttend"
+                               FontSize="18"
+                               FontWeight="Bold"
+                               Foreground="#1A3A6B"
+                               FontFamily="Segoe UI"
+                               HorizontalAlignment="Center" />
+                    <TextBlock Text="Set up your account to get started"
+                               FontSize="11"
+                               Foreground="#8AAAC8"
+                               FontFamily="Segoe UI"
+                               HorizontalAlignment="Center"
+                               Margin="0 4 0 24" />
+
+                    <!-- Company Name -->
+                    <TextBlock Text="COMPANY / FACTORY NAME"
+                               FontSize="10"
+                               FontWeight="SemiBold"
+                               Foreground="#6A8BB5"
+                               FontFamily="Segoe UI"
+                               Margin="0 0 0 5" />
+                    <Border BorderThickness="1"
+                            BorderBrush="#D8E4F0"
+                            CornerRadius="8"
+                            Background="#F7FAFD"
+                            Margin="0 0 0 14">
+                        <TextBox x:Name="TxtCompany"
+                                 BorderThickness="0"
+                                 Background="Transparent"
+                                 FontSize="13"
+                                 FontFamily="Segoe UI"
+                                 Foreground="#1A3A6B"
+                                 Padding="12 9" />
+                    </Border>
+
+                    <!-- Username -->
+                    <TextBlock Text="USERNAME"
+                               FontSize="10"
+                               FontWeight="SemiBold"
+                               Foreground="#6A8BB5"
+                               FontFamily="Segoe UI"
+                               Margin="0 0 0 5" />
+                    <Border BorderThickness="1"
+                            BorderBrush="#D8E4F0"
+                            CornerRadius="8"
+                            Background="#F7FAFD"
+                            Margin="0 0 0 14">
+                        <TextBox x:Name="TxtUsername"
+                                 BorderThickness="0"
+                                 Background="Transparent"
+                                 FontSize="13"
+                                 FontFamily="Segoe UI"
+                                 Foreground="#1A3A6B"
+                                 Padding="12 9" />
+                    </Border>
+
+                    <!-- Password -->
+                    <TextBlock Text="PASSWORD"
+                               FontSize="10"
+                               FontWeight="SemiBold"
+                               Foreground="#6A8BB5"
+                               FontFamily="Segoe UI"
+                               Margin="0 0 0 5" />
+                    <Border BorderThickness="1"
+                            BorderBrush="#D8E4F0"
+                            CornerRadius="8"
+                            Background="#F7FAFD"
+                            Margin="0 0 0 14">
+                        <PasswordBox x:Name="TxtPassword"
+                                     BorderThickness="0"
+                                     Background="Transparent"
+                                     FontSize="13"
+                                     FontFamily="Segoe UI"
+                                     Foreground="#1A3A6B"
+                                     Padding="12 9" />
+                    </Border>
+
+                    <!-- Confirm Password -->
+                    <TextBlock Text="CONFIRM PASSWORD"
+                               FontSize="10"
+                               FontWeight="SemiBold"
+                               Foreground="#6A8BB5"
+                               FontFamily="Segoe UI"
+                               Margin="0 0 0 5" />
+                    <Border BorderThickness="1"
+                            BorderBrush="#D8E4F0"
+                            CornerRadius="8"
+                            Background="#F7FAFD"
+                            Margin="0 0 0 14">
+                        <PasswordBox x:Name="TxtConfirmPassword"
+                                     BorderThickness="0"
+                                     Background="Transparent"
+                                     FontSize="13"
+                                     FontFamily="Segoe UI"
+                                     Foreground="#1A3A6B"
+                                     Padding="12 9" />
+                    </Border>
+
+                    <!-- Security Question -->
+                    <TextBlock Text="SECURITY QUESTION"
+                               FontSize="10"
+                               FontWeight="SemiBold"
+                               Foreground="#6A8BB5"
+                               FontFamily="Segoe UI"
+                               Margin="0 0 0 5" />
+                    <Border BorderThickness="1"
+                            BorderBrush="#D8E4F0"
+                            CornerRadius="8"
+                            Background="#F7FAFD"
+                            Margin="0 0 0 14">
+                        <ComboBox x:Name="CmbSecurityQuestion"
+                                  BorderThickness="0"
+                                  Background="Transparent"
+                                  FontSize="13"
+                                  FontFamily="Segoe UI"
+                                  Foreground="#1A3A6B"
+                                  Padding="10 8">
+
+                            <ComboBoxItem Content="What was the name of your first pet?" />
+                            <ComboBoxItem Content="What was the name of your primary school?" />
+                            <ComboBoxItem Content="What is your place of birth?" />
+                            <ComboBoxItem Content="What was your childhood nickname?" />
+                        </ComboBox>
+                    </Border>
+
+                    <!-- Security Answer -->
+                    <TextBlock Text="SECURITY ANSWER"
+                               FontSize="10"
+                               FontWeight="SemiBold"
+                               Foreground="#6A8BB5"
+                               FontFamily="Segoe UI"
+                               Margin="0 0 0 5" />
+                    <Border BorderThickness="1"
+                            BorderBrush="#D8E4F0"
+                            CornerRadius="8"
+                            Background="#F7FAFD"
+                            Margin="0 0 0 6">
+                        <TextBox x:Name="TxtSecurityAnswer"
+                                 BorderThickness="0"
+                                 Background="Transparent"
+                                 FontSize="13"
+                                 FontFamily="Segoe UI"
+                                 Foreground="#1A3A6B"
+                                 Padding="12 9" />
+                    </Border>
+
+                    <!-- Error Message -->
+                    <TextBlock x:Name="TxtError"
+                               Text=""
+                               FontSize="11"
+                               Foreground="#C0392B"
+                               FontFamily="Segoe UI"
+                               Margin="0 0 0 10"
+                               Visibility="Collapsed"
+                               TextWrapping="Wrap" />
+
+                    <!-- Complete Setup Button -->
+                    <Button x:Name="BtnSetup"
+                            Content="Complete Setup"
+                            Click="BtnSetup_Click"
+                            Height="40"
+                            FontSize="13"
+                            FontWeight="SemiBold"
+                            FontFamily="Segoe UI"
+                            Foreground="White"
+                            Cursor="Hand"
+                            Margin="0 8 0 0">
+                        <Button.Template>
+                            <ControlTemplate TargetType="Button">
+                                <Border x:Name="bg"
+                                        Background="#1A3A6B"
+                                        CornerRadius="8">
+                                    <ContentPresenter HorizontalAlignment="Center"
+                                                      VerticalAlignment="Center" />
+                                </Border>
+                                <ControlTemplate.Triggers>
+                                    <Trigger Property="IsMouseOver"
+                                             Value="True">
+                                        <Setter TargetName="bg"
+                                                Property="Background"
+                                                Value="#22488A" />
+                                    </Trigger>
+                                </ControlTemplate.Triggers>
+                            </ControlTemplate>
+                        </Button.Template>
+                    </Button>
+
+                    <!-- Version -->
+                    <TextBlock Text="Smart Biometric Attendance System v1.0"
+                               FontSize="10"
+                               Foreground="#8AAAC8"
+                               FontFamily="Segoe UI"
+                               HorizontalAlignment="Center"
+                               Margin="0 16 0 0" />
+
+                </StackPanel>
+            </Border>
+        </ScrollViewer>
+
+    </Grid>
+</Window>

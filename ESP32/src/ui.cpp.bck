@@ -1,0 +1,507 @@
+#include <Arduino.h>
+#include <TFT_eSPI.h>
+#include <SPI.h>
+
+TFT_eSPI tft = TFT_eSPI();
+
+#define W 240
+#define H 320
+#define NUM_SCREENS 8
+#define TOUCH_DEBOUNCE_MS 250
+
+// RGB565 colors matched to SmartAttend_TFT_Mockup-1.html.
+static const uint16_t C_BG       = 0x0882; // #0D1117
+static const uint16_t C_CARD     = 0x10C4; // #161B22
+static const uint16_t C_BORDER   = 0x2125; // #21262D
+static const uint16_t C_TEXT     = 0xE77E; // #E6EDF3
+static const uint16_t C_MUTED    = 0x8CB3; // #8B949E
+static const uint16_t C_BLUE     = 0x5D3F; // #58A6FF
+static const uint16_t C_GREEN    = 0x3DCA; // #3FB950
+static const uint16_t C_RED      = 0xFA89; // #F85149
+static const uint16_t C_AMBER    = 0xD4C4; // #D29922
+static const uint16_t C_PURPLE   = 0xD55F; // #D2A8FF
+static const uint16_t C_DARK     = 0x31A7; // #30363D
+
+static const uint16_t BG_HOME_1  = 0x0043; // #050A1A
+static const uint16_t BG_HOME_2  = 0x08A5; // #0A1628
+static const uint16_t BG_SCAN_2  = 0x0884; // #091020
+static const uint16_t BG_FP_2    = 0x0883; // #0A0F1A
+static const uint16_t BG_OK_1    = 0x00A1; // #051A0A
+static const uint16_t BG_OK_2    = 0x08E2; // #0A1F10
+static const uint16_t BG_BAD_1   = 0x1800; // #1A0505
+static const uint16_t BG_BAD_2   = 0x2001; // #1F0A0A
+static const uint16_t BG_OUT_2   = 0x0862; // #0A0D14
+static const uint16_t BG_ENR_2   = 0x0863; // #080D1A
+
+uint8_t currentScreen = 0;
+uint32_t lastTouchPress = 0;
+char pinBuffer[7] = "";
+uint8_t pinLen = 0;
+
+void drawScreen(uint8_t n);
+
+uint16_t mix565(uint16_t a, uint16_t b, uint8_t amount)
+{
+  uint8_t ar = ((a >> 11) & 0x1F) << 3;
+  uint8_t ag = ((a >> 5) & 0x3F) << 2;
+  uint8_t ab = (a & 0x1F) << 3;
+  uint8_t br = ((b >> 11) & 0x1F) << 3;
+  uint8_t bg = ((b >> 5) & 0x3F) << 2;
+  uint8_t bb = (b & 0x1F) << 3;
+
+  uint8_t r = ar + (((int16_t)br - ar) * amount) / 255;
+  uint8_t g = ag + (((int16_t)bg - ag) * amount) / 255;
+  uint8_t bl = ab + (((int16_t)bb - ab) * amount) / 255;
+  return tft.color565(r, g, bl);
+}
+
+void fillGradient(uint16_t top, uint16_t bottom)
+{
+  for (int y = 0; y < H; y++) {
+    tft.drawFastHLine(0, y, W, mix565(top, bottom, (uint8_t)((y * 255) / (H - 1))));
+  }
+}
+
+void textCenter(const char* txt, int y, uint16_t fg, uint16_t bg, uint8_t size = 1)
+{
+  tft.setTextColor(fg, bg);
+  tft.setTextSize(size);
+  tft.setCursor((W - tft.textWidth(txt)) / 2, y);
+  tft.print(txt);
+}
+
+void textLeft(const char* txt, int x, int y, uint16_t fg, uint16_t bg, uint8_t size = 1)
+{
+  tft.setTextColor(fg, bg);
+  tft.setTextSize(size);
+  tft.setCursor(x, y);
+  tft.print(txt);
+}
+
+void drawWifi(int x, int y)
+{
+  const uint8_t heights[] = {5, 8, 11, 15};
+  for (int i = 0; i < 4; i++) {
+    tft.fillRoundRect(x + i * 6, y + 15 - heights[i], 4, heights[i], 1, C_GREEN);
+  }
+}
+
+void topBar(uint16_t bg)
+{
+  drawWifi(16, 14);
+  textLeft("08:30", W - 48, 15, C_MUTED, bg);
+}
+
+void divider(int y, uint16_t bg)
+{
+  for (int x = 24; x < W - 24; x++) {
+    uint16_t col = (x < 58 || x > W - 58) ? bg : C_BORDER;
+    tft.drawPixel(x, y, col);
+  }
+}
+
+void progress(int x, int y, int w, int h, int pct, uint16_t fill)
+{
+  tft.fillRoundRect(x, y, w, h, h / 2, C_BORDER);
+  int fw = (w * pct) / 100;
+  if (fw > 0) tft.fillRoundRect(x, y, fw, h, h / 2, fill);
+}
+
+void badge(int x, int y, int w, int h, const char* label, uint16_t bg, uint16_t accent)
+{
+  uint16_t fill = mix565(bg, accent, 28);
+  uint16_t border = mix565(bg, accent, 75);
+  tft.fillRoundRect(x, y, w, h, h / 2, fill);
+  tft.drawRoundRect(x, y, w, h, h / 2, border);
+  textCenter(label, y + (h - 8) / 2, accent, fill);
+}
+
+void circleIcon(int cx, int cy, int r, uint16_t bg, uint16_t accent)
+{
+  tft.fillCircle(cx, cy, r, mix565(bg, accent, 18));
+  tft.drawCircle(cx, cy, r, mix565(bg, accent, 95));
+  tft.drawCircle(cx, cy, r - 1, mix565(bg, accent, 55));
+}
+
+void rfidGlyph(int cx, int cy, uint16_t color)
+{
+  tft.drawRoundRect(cx - 18, cy - 12, 36, 24, 3, color);
+  tft.drawFastHLine(cx - 11, cy - 5, 22, color);
+  tft.drawFastHLine(cx - 11, cy + 1, 15, color);
+  tft.fillCircle(cx + 11, cy + 5, 2, color);
+}
+
+void checkGlyph(int cx, int cy, uint16_t color)
+{
+  for (int i = 0; i < 3; i++) {
+    tft.drawLine(cx - 16, cy - 1 + i, cx - 5, cy + 12 + i, color);
+    tft.drawLine(cx - 5, cy + 12 + i, cx + 18, cy - 15 + i, color);
+  }
+}
+
+void xGlyph(int cx, int cy, uint16_t color)
+{
+  for (int i = -1; i <= 1; i++) {
+    tft.drawLine(cx - 16, cy - 16 + i, cx + 16, cy + 16 + i, color);
+    tft.drawLine(cx + 16, cy - 16 + i, cx - 16, cy + 16 + i, color);
+  }
+}
+
+void handGlyph(int cx, int cy, uint16_t color)
+{
+  tft.fillRoundRect(cx - 10, cy - 10, 5, 25, 2, color);
+  tft.fillRoundRect(cx - 3, cy - 15, 5, 30, 2, color);
+  tft.fillRoundRect(cx + 4, cy - 13, 5, 27, 2, color);
+  tft.drawLine(cx + 12, cy - 8, cx + 18, cy - 15, color);
+  tft.drawLine(cx + 15, cy - 4, cx + 22, cy - 8, color);
+  tft.fillRoundRect(cx - 11, cy + 14, 26, 8, 3, color);
+}
+
+void drawHome()
+{
+  fillGradient(BG_HOME_1, BG_HOME_2);
+  topBar(BG_HOME_1);
+
+  textCenter("SMARTATTEND", 33, C_BLUE, BG_HOME_1);
+  textCenter("08:30", 47, C_TEXT, BG_HOME_1, 4);
+  textCenter("WED 07 MAY 2026", 91, C_MUTED, BG_HOME_1);
+  divider(123, BG_HOME_1);
+  textCenter("PLACE CARD TO SCAN", 145, C_BLUE, BG_HOME_2);
+
+  int cx = W / 2;
+  int cy = 198;
+  tft.drawCircle(cx, cy, 42, mix565(BG_HOME_2, C_BLUE, 45));
+  tft.drawCircle(cx, cy, 54, mix565(BG_HOME_2, C_BLUE, 25));
+  circleIcon(cx, cy, 31, BG_HOME_2, C_BLUE);
+  rfidGlyph(cx, cy, C_BLUE);
+
+  textCenter("OR FINGERPRINT", 251, C_DARK, BG_HOME_2);
+  textCenter("OR PIN", 266, C_DARK, BG_HOME_2);
+  textCenter("SMARTATTEND v1.0", 300, C_DARK, BG_HOME_2);
+}
+
+void drawScan()
+{
+  fillGradient(BG_HOME_1, BG_SCAN_2);
+  textCenter("SCANNING RFID", 48, C_BLUE, BG_HOME_1);
+
+  int cx = W / 2;
+  int cy = 135;
+  tft.drawCircle(cx, cy, 45, mix565(BG_SCAN_2, C_BLUE, 45));
+  tft.drawCircle(cx, cy, 57, mix565(BG_SCAN_2, C_BLUE, 25));
+  circleIcon(cx, cy, 36, BG_SCAN_2, C_BLUE);
+  rfidGlyph(cx, cy, C_BLUE);
+
+  textCenter("Hold card near reader", 207, C_MUTED, BG_SCAN_2);
+  textCenter("Keep still...", 224, C_MUTED, BG_SCAN_2);
+  progress(48, 252, 144, 4, 60, C_BLUE);
+  textCenter("Card ID: A1B2C3D4", 271, C_DARK, BG_SCAN_2);
+}
+
+void drawFingerprint()
+{
+  fillGradient(BG_HOME_1, BG_FP_2);
+  textCenter("FINGERPRINT", 48, C_PURPLE, BG_HOME_1);
+
+  int cx = W / 2;
+  int cy = 137;
+  circleIcon(cx, cy, 36, BG_FP_2, C_PURPLE);
+  const int widths[] = {24, 32, 38, 34, 29, 22, 15};
+  for (int i = 0; i < 7; i++) {
+    int y = cy - 18 + i * 6;
+    tft.fillRoundRect(cx - widths[i] / 2, y, widths[i], 3, 1, mix565(BG_FP_2, C_PURPLE, 150));
+  }
+
+  textCenter("Place finger on", 207, C_MUTED, BG_FP_2);
+  textCenter("the sensor", 224, C_MUTED, BG_FP_2);
+  int dotX = (W - 58) / 2;
+  for (int i = 0; i < 5; i++) {
+    tft.fillCircle(dotX + i * 14, 252, 4, i < 3 ? C_PURPLE : C_BORDER);
+  }
+  textCenter("Attempt 3 of 5", 271, C_MUTED, BG_FP_2);
+}
+
+void drawPin()
+{
+  fillGradient(BG_HOME_1, BG_FP_2);
+  textCenter("ENTER PIN", 22, C_AMBER, BG_HOME_1);
+
+  tft.fillRoundRect(22, 46, 196, 34, 6, C_BG);
+  tft.drawRoundRect(22, 46, 196, 34, 6, C_BORDER);
+  int dotX = (W - 86) / 2;
+  for (int i = 0; i < 6; i++) {
+    int x = dotX + i * 17;
+    if (i < pinLen) tft.fillCircle(x, 63, 5, C_AMBER);
+    else tft.drawCircle(x, 63, 5, C_DARK);
+  }
+
+  const char* keys[] = {"1","2","3","4","5","6","7","8","9","CLR","0","OK"};
+  int kx = 22, ky = 96, kw = 62, kh = 39, gap = 7;
+  for (int i = 0; i < 12; i++) {
+    int x = kx + (i % 3) * (kw + gap);
+    int y = ky + (i / 3) * (kh + gap);
+    uint16_t fill = C_CARD;
+    uint16_t border = C_BORDER;
+    uint16_t fg = C_TEXT;
+    uint8_t size = 2;
+    if (i == 9) {
+      fg = C_MUTED;
+      size = 1;
+    }
+    if (i == 11) {
+      fill = mix565(BG_FP_2, C_AMBER, 38);
+      border = mix565(BG_FP_2, C_AMBER, 90);
+      fg = C_AMBER;
+    }
+    tft.fillRoundRect(x, y, kw, kh, 5, fill);
+    tft.drawRoundRect(x, y, kw, kh, 5, border);
+    tft.setTextColor(fg, fill);
+    tft.setTextSize(size);
+    tft.setCursor(x + (kw - tft.textWidth(keys[i])) / 2, y + (kh - size * 8) / 2);
+    tft.print(keys[i]);
+  }
+}
+
+void drawPinDots()
+{
+  tft.fillRoundRect(23, 47, 194, 32, 6, C_BG);
+  int dotX = (W - 86) / 2;
+  for (int i = 0; i < 6; i++) {
+    int x = dotX + i * 17;
+    if (i < pinLen) tft.fillCircle(x, 63, 5, C_AMBER);
+    else tft.drawCircle(x, 63, 5, C_DARK);
+  }
+}
+
+void showPinMessage(const char* msg, uint16_t color)
+{
+  tft.fillRect(0, 82, W, 12, BG_FP_2);
+  textCenter(msg, 84, color, BG_FP_2);
+}
+
+bool handlePinTouch(uint16_t x, uint16_t y)
+{
+  const char* keys[] = {"1","2","3","4","5","6","7","8","9","CLR","0","OK"};
+  int kx = 22, ky = 96, kw = 62, kh = 39, gap = 7;
+
+  for (int i = 0; i < 12; i++) {
+    int bx = kx + (i % 3) * (kw + gap);
+    int by = ky + (i / 3) * (kh + gap);
+    if (x < bx || x > bx + kw || y < by || y > by + kh) continue;
+
+    if (i == 9) {
+      if (pinLen > 0) {
+        pinLen--;
+        pinBuffer[pinLen] = '\0';
+      }
+      showPinMessage("PIN cleared", C_MUTED);
+      drawPinDots();
+      return true;
+    }
+
+    if (i == 11) {
+      if (pinLen == 0) {
+        showPinMessage("Enter PIN first", C_RED);
+      } else if (strcmp(pinBuffer, "123456") == 0 || strcmp(pinBuffer, "123") == 0) {
+        showPinMessage("PIN accepted", C_GREEN);
+        delay(450);
+        pinLen = 0;
+        pinBuffer[0] = '\0';
+        currentScreen = 4;
+        drawScreen(currentScreen);
+      } else {
+        showPinMessage("Wrong PIN", C_RED);
+        delay(650);
+        pinLen = 0;
+        pinBuffer[0] = '\0';
+        drawPin();
+      }
+      return true;
+    }
+
+    if (pinLen < 6) {
+      pinBuffer[pinLen++] = keys[i][0];
+      pinBuffer[pinLen] = '\0';
+      showPinMessage("PIN entered", C_AMBER);
+      drawPinDots();
+    } else {
+      showPinMessage("PIN full", C_RED);
+    }
+    return true;
+  }
+
+  return false;
+}
+
+void drawGranted()
+{
+  fillGradient(BG_OK_1, BG_OK_2);
+  int cx = W / 2;
+  circleIcon(cx, 82, 36, BG_OK_1, C_GREEN);
+  checkGlyph(cx, 82, C_GREEN);
+
+  textCenter("WELCOME!", 137, C_GREEN, BG_OK_2, 2);
+  textCenter("Ashan Kumara", 168, C_TEXT, BG_OK_2);
+  textCenter("08:12 AM - Wed 07 May", 187, C_MUTED, BG_OK_2);
+  badge(73, 210, 94, 19, "RFID CARD", BG_OK_2, C_GREEN);
+  textCenter("Check-in Successful", 242, C_GREEN, BG_OK_2);
+  progress(48, 265, 144, 4, 75, C_GREEN);
+  textCenter("Closing in 3s...", 287, C_DARK, BG_OK_2);
+}
+
+void drawDenied()
+{
+  fillGradient(BG_BAD_1, BG_BAD_2);
+  int cx = W / 2;
+  circleIcon(cx, 82, 36, BG_BAD_1, C_RED);
+  xGlyph(cx, 82, C_RED);
+
+  textCenter("DENIED!", 139, C_RED, BG_BAD_2, 2);
+  textCenter("Card not registered", 170, C_MUTED, BG_BAD_2);
+  textCenter("in the system", 186, C_MUTED, BG_BAD_2);
+
+  tft.fillRoundRect(64, 213, 112, 20, 4, mix565(BG_BAD_2, C_RED, 22));
+  tft.drawRoundRect(64, 213, 112, 20, 4, mix565(BG_BAD_2, C_RED, 55));
+  textCenter("ID: A1B2C3D4", 219, C_RED, mix565(BG_BAD_2, C_RED, 22));
+
+  textCenter("Contact administrator", 253, C_MUTED, BG_BAD_2);
+  textCenter("to register your card", 269, C_MUTED, BG_BAD_2);
+  textCenter("Closing in 3s...", 293, C_DARK, BG_BAD_2);
+}
+
+void drawCheckout()
+{
+  fillGradient(BG_HOME_1, BG_OUT_2);
+  int cx = W / 2;
+  circleIcon(cx, 74, 36, BG_OUT_2, C_AMBER);
+  handGlyph(cx, 72, C_AMBER);
+
+  textCenter("CHECKED OUT", 130, C_AMBER, BG_OUT_2, 2);
+  textCenter("Ashan Kumara", 162, C_TEXT, BG_OUT_2);
+  textCenter("8h 52m", 187, C_AMBER, BG_OUT_2, 3);
+  textCenter("TOTAL HOURS TODAY", 225, C_MUTED, BG_OUT_2);
+
+  textLeft("08:12", 34, 253, C_TEXT, BG_OUT_2, 2);
+  textLeft("->", 111, 253, C_BORDER, BG_OUT_2, 2);
+  textLeft("17:04", 157, 253, C_TEXT, BG_OUT_2, 2);
+  textLeft("Check In", 39, 276, C_MUTED, BG_OUT_2);
+  textLeft("Check Out", 154, 276, C_MUTED, BG_OUT_2);
+  textCenter("Closing in 3s...", 301, C_DARK, BG_OUT_2);
+}
+
+void drawEnrollment()
+{
+  fillGradient(BG_HOME_1, BG_ENR_2);
+  textCenter("NEW ENROLLMENT", 13, C_BLUE, BG_HOME_1);
+
+  tft.fillRoundRect(22, 34, 196, 43, 6, C_BG);
+  tft.drawRoundRect(22, 34, 196, 43, 6, C_BORDER);
+  textCenter("USER ID", 41, C_MUTED, C_BG);
+  textCenter("EMP-10001", 55, C_BLUE, C_BG, 2);
+
+  const char* names[] = {"Fingerprint", "RFID Card", "PIN Setup"};
+  const char* status[] = {"Enrolled successfully", "Scan card now...", "Pending"};
+  const uint8_t states[] = {0, 1, 2};
+  int y = 95;
+  for (int i = 0; i < 3; i++) {
+    uint16_t fill = C_BG;
+    uint16_t border = C_BORDER;
+    uint16_t nameCol = C_TEXT;
+    uint16_t statusCol = C_MUTED;
+    uint16_t circleFill = C_BORDER;
+    uint16_t circleText = C_MUTED;
+    if (states[i] == 0) {
+      fill = mix565(BG_ENR_2, C_GREEN, 14);
+      border = mix565(BG_ENR_2, C_GREEN, 70);
+      nameCol = C_GREEN;
+      statusCol = mix565(BG_ENR_2, C_GREEN, 150);
+      circleFill = mix565(BG_ENR_2, C_GREEN, 55);
+      circleText = C_GREEN;
+    } else if (states[i] == 1) {
+      fill = mix565(BG_ENR_2, C_BLUE, 18);
+      border = mix565(BG_ENR_2, C_BLUE, 100);
+      nameCol = C_BLUE;
+      statusCol = mix565(BG_ENR_2, C_BLUE, 150);
+      circleFill = C_BLUE;
+      circleText = TFT_WHITE;
+    }
+
+    tft.fillRoundRect(22, y, 196, 42, 5, fill);
+    tft.drawRoundRect(22, y, 196, 42, 5, border);
+    tft.fillCircle(43, y + 21, 10, circleFill);
+    tft.setTextColor(circleText, circleFill);
+    tft.setTextSize(1);
+    tft.setCursor(states[i] == 0 ? 40 : 40, y + 17);
+    tft.print(states[i] == 0 ? "v" : String(i + 1));
+    textLeft(names[i], 62, y + 10, nameCol, fill);
+    textLeft(status[i], 62, y + 25, statusCol, fill);
+    y += 52;
+  }
+
+  textCenter("> Scan RFID card now <", 294, C_BLUE, BG_ENR_2);
+}
+
+void drawScreen(uint8_t n)
+{
+  switch (n) {
+    case 0: drawHome(); break;
+    case 1: drawScan(); break;
+    case 2: drawFingerprint(); break;
+    case 3: drawPin(); break;
+    case 4: drawGranted(); break;
+    case 5: drawDenied(); break;
+    case 6: drawCheckout(); break;
+    case 7: drawEnrollment(); break;
+  }
+
+  tft.fillRect(0, H - 14, W, 14, C_BG);
+  textLeft("< PREV", 10, H - 11, C_MUTED, C_BG);
+  textCenter(String(n + 1).c_str(), H - 11, C_DARK, C_BG);
+  textLeft("NEXT >", W - 52, H - 11, C_MUTED, C_BG);
+}
+
+void setup()
+{
+  Serial.begin(115200);
+  delay(300);
+  Serial.println("SmartAttend TFT mockup starting");
+
+  tft.init();
+  tft.setRotation(0);
+  tft.setTextWrap(false);
+
+  uint16_t calData[5] = { 214, 3594, 270, 3509, 1 };
+  tft.setTouch(calData);
+
+  fillGradient(BG_HOME_1, BG_HOME_2);
+  textCenter("SmartAttend", 133, C_BLUE, BG_HOME_2, 2);
+  textCenter("TFT Screen Demo", 162, C_MUTED, BG_HOME_2);
+  delay(1200);
+
+  drawScreen(currentScreen);
+}
+
+void loop()
+{
+  uint32_t now = millis();
+  uint16_t x = 0;
+  uint16_t y = 0;
+
+  if (tft.getTouch(&x, &y) && now - lastTouchPress > TOUCH_DEBOUNCE_MS) {
+    lastTouchPress = now;
+
+    if (currentScreen == 3 && handlePinTouch(x, y)) {
+      Serial.printf("PIN touch %u,%u -> %s\n", x, y, pinBuffer);
+      return;
+    }
+
+    if (x < W / 2) {
+      currentScreen = (currentScreen + NUM_SCREENS - 1) % NUM_SCREENS;
+    } else {
+      currentScreen = (currentScreen + 1) % NUM_SCREENS;
+    }
+
+    drawScreen(currentScreen);
+    Serial.printf("Touch %u,%u -> Screen %u\n", x, y, currentScreen + 1);
+  }
+}

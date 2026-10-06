@@ -1,0 +1,195 @@
+﻿<Window x:Class="SmartAttend.LoginWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:SmartAttend"
+        mc:Ignorable="d"
+        Icon="C:\Users\kp\Desktop\smartAttendanceSystem-master\SmartAttend\Assets\smartattend.ico"
+        Title="SmartAttend — Login"
+        Height="520"
+        Width="420"
+        WindowStartupLocation="CenterScreen"
+        ResizeMode="NoResize"
+        Background="#EEF3FA">
+    <Grid>
+        <Grid>
+            <Border Background="#FFFFFF"
+                    CornerRadius="16"
+                    BorderThickness="1"
+                    BorderBrush="#D8E4F0"
+                    Width="340"
+                    VerticalAlignment="Center"
+                    HorizontalAlignment="Center"
+                    Padding="32">
+                <StackPanel>
+
+                    <!-- Logo -->
+                    <Border Width="56"
+                            Height="56"
+                            CornerRadius="14"
+                            Background="#EEF3FA"
+                            BorderThickness="1"
+                            BorderBrush="#D8E4F0"
+                            HorizontalAlignment="Center"
+                            Margin="0 0 0 14">
+                        <Grid>
+                            <Grid.RowDefinitions>
+                                <RowDefinition />
+                                <RowDefinition />
+                            </Grid.RowDefinitions>
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition />
+                                <ColumnDefinition />
+                            </Grid.ColumnDefinitions>
+                            <Border Grid.Row="0"
+                                    Grid.Column="0"
+                                    Background="#1A3A6B"
+                                    Margin="8 8 4 4"
+                                    CornerRadius="3" />
+                            <Border Grid.Row="0"
+                                    Grid.Column="1"
+                                    Background="#1A3A6B"
+                                    Margin="4 8 8 4"
+                                    CornerRadius="3" />
+                            <Border Grid.Row="1"
+                                    Grid.Column="0"
+                                    Background="#1A3A6B"
+                                    Margin="8 4 4 8"
+                                    CornerRadius="3" />
+                            <Border Grid.Row="1"
+                                    Grid.Column="1"
+                                    Background="#378ADD"
+                                    Margin="4 4 8 8"
+                                    CornerRadius="3" />
+                        </Grid>
+                    </Border>
+
+                    <!-- Title -->
+                    <TextBlock Text="SmartAttend"
+                               FontSize="20"
+                               FontWeight="Bold"
+                               Foreground="#1A3A6B"
+                               FontFamily="Segoe UI"
+                               HorizontalAlignment="Center" />
+                    <TextBlock Text="Employee Attendance Management"
+                               FontSize="11"
+                               Foreground="#8AAAC8"
+                               FontFamily="Segoe UI"
+                               HorizontalAlignment="Center"
+                               Margin="0 4 0 24" />
+
+                    <!-- Username -->
+                    <TextBlock Text="USERNAME"
+                               FontSize="10"
+                               FontWeight="SemiBold"
+                               Foreground="#6A8BB5"
+                               FontFamily="Segoe UI"
+                               Margin="0 0 0 5" />
+                    <Border BorderThickness="1"
+                            BorderBrush="#D8E4F0"
+                            CornerRadius="8"
+                            Background="#F7FAFD"
+                            Margin="0 0 0 14">
+                        <TextBox x:Name="TxtUsername"
+                                 BorderThickness="0"
+                                 Background="Transparent"
+                                 FontSize="13"
+                                 FontFamily="Segoe UI"
+                                 Foreground="#1A3A6B"
+                                 Padding="12 9" />
+                    </Border>
+
+                    <!-- Password -->
+                    <TextBlock Text="PASSWORD"
+                               FontSize="10"
+                               FontWeight="SemiBold"
+                               Foreground="#6A8BB5"
+                               FontFamily="Segoe UI"
+                               Margin="0 0 0 5" />
+                    <Border BorderThickness="1"
+                            BorderBrush="#D8E4F0"
+                            CornerRadius="8"
+                            Background="#F7FAFD"
+                            Margin="0 0 0 6">
+                        <PasswordBox x:Name="TxtPassword"
+                                     BorderThickness="0"
+                                     Background="Transparent"
+                                     FontSize="13"
+                                     FontFamily="Segoe UI"
+                                     Foreground="#1A3A6B"
+                                     Padding="12 9" />
+                    </Border>
+
+                    <!-- Error Message -->
+                    <TextBlock x:Name="TxtError"
+                               Text=""
+                               FontSize="11"
+                               Foreground="#C0392B"
+                               FontFamily="Segoe UI"
+                               Margin="0 0 0 14"
+                               Visibility="Collapsed" />
+                    
+                    <!-- Forgot Password Link -->
+                    <Button Content="Forgot password?"
+                            Click="BtnForgotPassword_Click"
+                            HorizontalAlignment="Right"
+                            Background="Transparent"
+                            BorderThickness="0"
+                            Cursor="Hand"
+                            Margin="0 0 0 8">
+                        <Button.Template>
+                            <ControlTemplate TargetType="Button">
+                                <TextBlock Text="Forgot password?"
+                                           Foreground="#378ADD"
+                                           FontSize="11"
+                                           FontFamily="Segoe UI"
+                                           TextDecorations="Underline" />
+                            </ControlTemplate>
+                        </Button.Template>
+                    </Button>
+
+                    <!-- Sign In Button -->
+                    <Button x:Name="BtnLogin"
+                            Content="Sign In"
+                            Click="BtnLogin_Click"
+                            Height="40"
+                            FontSize="13"
+                            FontWeight="SemiBold"
+                            FontFamily="Segoe UI"
+                            Foreground="White"
+                            Cursor="Hand"
+                            Margin="0 8 0 0">
+                        <Button.Template>
+                            <ControlTemplate TargetType="Button">
+                                <Border x:Name="bg"
+                                        Background="#1A3A6B"
+                                        CornerRadius="8">
+                                    <ContentPresenter HorizontalAlignment="Center"
+                                                      VerticalAlignment="Center" />
+                                </Border>
+                                <ControlTemplate.Triggers>
+                                    <Trigger Property="IsMouseOver"
+                                             Value="True">
+                                        <Setter TargetName="bg"
+                                                Property="Background"
+                                                Value="#22488A" />
+                                    </Trigger>
+                                </ControlTemplate.Triggers>
+                            </ControlTemplate>
+                        </Button.Template>
+                    </Button>
+
+                    <!-- Version -->
+                    <TextBlock Text="Smart Biometric Attendance System v1.0"
+                               FontSize="10"
+                               Foreground="#8AAAC8"
+                               FontFamily="Segoe UI"
+                               HorizontalAlignment="Center"
+                               Margin="0 16 0 0" />
+
+                </StackPanel>
+            </Border>
+        </Grid>
+    </Grid>
+</Window>

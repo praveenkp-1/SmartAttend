@@ -1,0 +1,497 @@
+﻿<Window x:Class="SmartAttend.DeviceConfigWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        Title="Device Configuration"
+        Height="620" Width="560"
+        WindowStartupLocation="CenterOwner"
+        ResizeMode="NoResize"
+        Background="#EEF3FA">
+    <ScrollViewer VerticalScrollBarVisibility="Auto"
+                  HorizontalScrollBarVisibility="Auto">
+
+    <Grid Margin="20">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="*"/>
+        </Grid.RowDefinitions>
+
+        <!-- Header -->
+        <StackPanel Grid.Row="0" Margin="0 0 0 16">
+            <TextBlock Text="Device Configuration"
+                       FontSize="16" FontWeight="Bold"
+                       Foreground="#1A3A6B"
+                       FontFamily="Segoe UI"/>
+            <TextBlock Text="Connect and manage your SmartAttend ESP32 devices"
+                       FontSize="11" Foreground="#8AAAC8"
+                       FontFamily="Segoe UI" Margin="0 4 0 0"/>
+        </StackPanel>
+
+        <!-- Add New Device -->
+        <Border Grid.Row="1"
+                Background="White" CornerRadius="10"
+                BorderThickness="1" BorderBrush="#D8E4F0"
+                Padding="20" Margin="0 0 0 12">
+            <StackPanel>
+                <TextBlock Text="ADD NEW DEVICE"
+                           FontSize="10" FontWeight="SemiBold"
+                           Foreground="#8AAAC8"
+                           FontFamily="Segoe UI"
+                           Margin="0 0 0 14"/>
+
+                <!-- Scan Row -->
+                <Grid Margin="0 0 0 14">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="*"/>
+                        <ColumnDefinition Width="130"/>
+                    </Grid.ColumnDefinitions>
+                    <Border BorderThickness="1"
+                            BorderBrush="#D8E4F0"
+                            CornerRadius="8"
+                            Background="#F7FAFD"
+                            Margin="0 0 8 0">
+                        <TextBox x:Name="TxtScanStatus"
+                                 Text="Enter IP or click Scan to find devices"
+                                 BorderThickness="0"
+                                 Background="Transparent"
+                                 FontSize="12" FontFamily="Segoe UI"
+                                 Foreground="#8AAAC8"
+                                 Padding="12 9"
+                                 IsReadOnly="True"/>
+                    </Border>
+                    <Button Grid.Column="1"
+                            Content="🔍 Scan Network"
+                            FontSize="12" FontFamily="Segoe UI"
+                            Foreground="White" Cursor="Hand"
+                            Height="38" Click="Scan_Click">
+                        <Button.Template>
+                            <ControlTemplate TargetType="Button">
+                                <Border x:Name="bg"
+                                        Background="#1A3A6B"
+                                        CornerRadius="8">
+                                    <ContentPresenter
+                                        HorizontalAlignment="Center"
+                                        VerticalAlignment="Center"/>
+                                </Border>
+                                <ControlTemplate.Triggers>
+                                    <Trigger Property="IsMouseOver"
+                                             Value="True">
+                                        <Setter TargetName="bg"
+                                                Property="Background"
+                                                Value="#22488A"/>
+                                    </Trigger>
+                                </ControlTemplate.Triggers>
+                            </ControlTemplate>
+                        </Button.Template>
+                    </Button>
+                </Grid>
+
+                <!-- Form Fields -->
+                <Grid Margin="0 0 0 12">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="*"/>
+                        <ColumnDefinition Width="*"/>
+                    </Grid.ColumnDefinitions>
+
+                    <!-- Device Name -->
+                    <StackPanel Grid.Column="0"
+                                Margin="0 0 8 0">
+                        <TextBlock Text="DEVICE NAME"
+                                   FontSize="10" FontWeight="SemiBold"
+                                   Foreground="#6A8BB5"
+                                   FontFamily="Segoe UI"
+                                   Margin="0 0 0 5"/>
+                        <Border BorderThickness="1"
+                                BorderBrush="#D8E4F0"
+                                CornerRadius="8"
+                                Background="#F7FAFD">
+                            <TextBox x:Name="TxtDeviceName"
+                                     Text="Main Entrance"
+                                     BorderThickness="0"
+                                     Background="Transparent"
+                                     FontSize="12"
+                                     FontFamily="Segoe UI"
+                                     Foreground="#1A3A6B"
+                                     Padding="12 9"/>
+                        </Border>
+                    </StackPanel>
+
+                    <!-- IP Address -->
+                    <StackPanel Grid.Column="1">
+                        <TextBlock Text="IP ADDRESS"
+                                   FontSize="10" FontWeight="SemiBold"
+                                   Foreground="#6A8BB5"
+                                   FontFamily="Segoe UI"
+                                   Margin="0 0 0 5"/>
+                        <Border BorderThickness="1"
+                                BorderBrush="#D8E4F0"
+                                CornerRadius="8"
+                                Background="#F7FAFD">
+                            <TextBox x:Name="TxtDeviceIP"
+                                     BorderThickness="0"
+                                     Background="Transparent"
+                                     FontSize="12"
+                                     FontFamily="Segoe UI"
+                                     Foreground="#1A3A6B"
+                                     Padding="12 9"/>
+                        </Border>
+                    </StackPanel>
+                </Grid>
+
+                <Grid>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="*"/>
+                        <ColumnDefinition Width="*"/>
+                    </Grid.ColumnDefinitions>
+
+                    <!-- Port -->
+                    <StackPanel Grid.Column="0"
+                                Margin="0 0 8 0">
+                        <TextBlock Text="PORT"
+                                   FontSize="10" FontWeight="SemiBold"
+                                   Foreground="#6A8BB5"
+                                   FontFamily="Segoe UI"
+                                   Margin="0 0 0 5"/>
+                        <Border BorderThickness="1"
+                                BorderBrush="#D8E4F0"
+                                CornerRadius="8"
+                                Background="#F7FAFD">
+                            <TextBox x:Name="TxtDevicePort"
+                                     Text="5001"
+                                     BorderThickness="0"
+                                     Background="Transparent"
+                                     FontSize="12"
+                                     FontFamily="Segoe UI"
+                                     Foreground="#1A3A6B"
+                                     Padding="12 9"/>
+                        </Border>
+                        <!-- WiFi Credentials -->
+                        <Grid Margin="0 12 0 0">
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="*"/>
+                                <ColumnDefinition Width="*"/>
+                            </Grid.ColumnDefinitions>
+
+                            <!-- WiFi SSID -->
+                            <StackPanel Grid.Column="0" Margin="0 0 8 0">
+                                <TextBlock Text="WIFI SSID"
+                   FontSize="10" FontWeight="SemiBold"
+                   Foreground="#6A8BB5"
+                   FontFamily="Segoe UI"
+                   Margin="0 0 0 5"/>
+                                <Border BorderThickness="1" BorderBrush="#D8E4F0"
+                CornerRadius="8" Background="#F7FAFD">
+                                    <TextBox x:Name="TxtWifiSSID"
+                     BorderThickness="0"
+                     Background="Transparent"
+                     FontSize="12" FontFamily="Segoe UI"
+                     Foreground="#1A3A6B"
+                     Padding="12 9"/>
+                                </Border>
+                            </StackPanel>
+
+                            <!-- WiFi Password -->
+                            <StackPanel Grid.Column="1">
+                                <TextBlock Text="WIFI PASSWORD"
+                   FontSize="10" FontWeight="SemiBold"
+                   Foreground="#6A8BB5"
+                   FontFamily="Segoe UI"
+                   Margin="0 0 0 5"/>
+                                <Border BorderThickness="1" BorderBrush="#D8E4F0"
+                CornerRadius="8" Background="#F7FAFD">
+                                    <PasswordBox x:Name="TxtWifiPassword"
+                         BorderThickness="0"
+                         Background="Transparent"
+                         FontSize="12" FontFamily="Segoe UI"
+                         Foreground="#1A3A6B"
+                         Padding="12 9"/>
+                                </Border>
+                            </StackPanel>
+
+                        </Grid>
+                    </StackPanel>
+
+                    <!-- Device Key -->
+                    <StackPanel Grid.Column="1">
+                        <TextBlock Text="DEVICE KEY (Optional)"
+                                   FontSize="10" FontWeight="SemiBold"
+                                   Foreground="#6A8BB5"
+                                   FontFamily="Segoe UI"
+                                   Margin="0 0 0 5"/>
+                        <Border BorderThickness="1"
+                                BorderBrush="#D8E4F0"
+                                CornerRadius="8"
+                                Background="#F7FAFD">
+                            <TextBox x:Name="TxtDeviceKey"
+                                     BorderThickness="0"
+                                     Background="Transparent"
+                                     FontSize="12"
+                                     FontFamily="Segoe UI"
+                                     Foreground="#1A3A6B"
+                                     Padding="12 9"/>
+                        </Border>
+                    </StackPanel>
+                </Grid>
+
+                <!-- Error -->
+                <TextBlock x:Name="TxtError"
+                           Text="" FontSize="11"
+                           Foreground="#C0392B"
+                           FontFamily="Segoe UI"
+                           Visibility="Collapsed"
+                           Margin="0 8 0 0"/>
+
+                <!-- Connect Button -->
+                <Button Content="Connect Device"
+                        FontSize="12" FontFamily="Segoe UI"
+                        Foreground="White" Cursor="Hand"
+                        Height="38" Margin="0 12 0 0"
+                        Click="Connect_Click">
+                    <Button.Template>
+                        <ControlTemplate TargetType="Button">
+                            <Border x:Name="bg"
+                                    Background="#1A3A6B"
+                                    CornerRadius="8">
+                                <ContentPresenter
+                                    HorizontalAlignment="Center"
+                                    VerticalAlignment="Center"/>
+                            </Border>
+                            <ControlTemplate.Triggers>
+                                <Trigger Property="IsMouseOver"
+                                         Value="True">
+                                    <Setter TargetName="bg"
+                                            Property="Background"
+                                            Value="#22488A"/>
+                                </Trigger>
+                            </ControlTemplate.Triggers>
+                        </ControlTemplate>
+                    </Button.Template>
+                </Button>
+
+            </StackPanel>
+        </Border>
+
+        <!-- Connected Devices List -->
+        <Border Grid.Row="2"
+        Background="White"
+        CornerRadius="10"
+        BorderThickness="1"
+        BorderBrush="#D8E4F0"
+        Padding="20">
+
+            <StackPanel>
+
+                <TextBlock Text="CONNECTED DEVICES"
+                   FontSize="10"
+                   FontWeight="SemiBold"
+                   Foreground="#8AAAC8"
+                   FontFamily="Segoe UI"
+                   Margin="0 0 0 12"/>
+
+                <!-- Scrollable Device List -->
+                <ScrollViewer VerticalScrollBarVisibility="Auto"
+                      MaxHeight="200">
+
+                    <ItemsControl x:Name="DeviceList">
+
+                        <ItemsControl.ItemTemplate>
+                            <DataTemplate>
+
+                                <Border BorderThickness="1"
+                                BorderBrush="#D8E4F0"
+                                CornerRadius="8"
+                                Background="#F7FAFD"
+                                Padding="14 12"
+                                Margin="0 0 0 8">
+
+                                    <Grid>
+                                        <Grid.ColumnDefinitions>
+                                            <ColumnDefinition Width="Auto"/>
+                                            <ColumnDefinition Width="*"/>
+                                            <ColumnDefinition Width="Auto"/>
+                                        </Grid.ColumnDefinitions>
+
+                                        <!-- Status Dot -->
+                                        <Ellipse Grid.Column="0"
+                                         Width="10"
+                                         Height="10"
+                                         Margin="0 0 12 0"
+                                         VerticalAlignment="Center">
+
+                                            <Ellipse.Style>
+                                                <Style TargetType="Ellipse">
+                                                    <Setter Property="Fill"
+                                                    Value="#A32D2D"/>
+
+                                                    <Style.Triggers>
+                                                        <DataTrigger Binding="{Binding Status}"
+                                                             Value="Online">
+                                                            <Setter Property="Fill"
+                                                            Value="#3B6D11"/>
+                                                        </DataTrigger>
+                                                    </Style.Triggers>
+
+                                                </Style>
+                                            </Ellipse.Style>
+
+                                        </Ellipse>
+
+                                        <!-- Device Info -->
+                                        <StackPanel Grid.Column="1"
+                                            VerticalAlignment="Center">
+
+                                            <TextBlock Text="{Binding Name}"
+                                               FontSize="13"
+                                               FontWeight="SemiBold"
+                                               Foreground="#1A3A6B"
+                                               FontFamily="Segoe UI"/>
+
+                                            <StackPanel Orientation="Horizontal"
+                                                Margin="0 3 0 0">
+
+                                                <TextBlock Text="{Binding IPAddress}"
+                                                   FontSize="11"
+                                                   Foreground="#8AAAC8"
+                                                   FontFamily="Courier New"/>
+
+                                                <TextBlock Text=" · "
+                                                   FontSize="11"
+                                                   Foreground="#8AAAC8"/>
+
+                                                <TextBlock Text="Port: "
+                                                   FontSize="11"
+                                                   Foreground="#8AAAC8"
+                                                   FontFamily="Segoe UI"/>
+
+                                                <TextBlock Text="{Binding Port}"
+                                                   FontSize="11"
+                                                   Foreground="#8AAAC8"
+                                                   FontFamily="Segoe UI"/>
+
+                                                <TextBlock Text=" · v"
+                                                   FontSize="11"
+                                                   Foreground="#8AAAC8"/>
+
+                                                <TextBlock Text="{Binding FirmwareVersion}"
+                                                   FontSize="11"
+                                                   Foreground="#8AAAC8"
+                                                   FontFamily="Segoe UI"/>
+
+                                            </StackPanel>
+
+                                            <TextBlock Text="{Binding LastSeen}"
+                                               FontSize="10"
+                                               Foreground="#8AAAC8"
+                                               FontFamily="Segoe UI"
+                                               Margin="0 2 0 0"/>
+
+                                        </StackPanel>
+
+                                        <!-- Buttons -->
+                                        <StackPanel Grid.Column="2"
+                                            Orientation="Horizontal"
+                                            VerticalAlignment="Center">
+
+                                            <Button Content="Test"
+                                            FontSize="11"
+                                            FontFamily="Segoe UI"
+                                            Foreground="#1A3A6B"
+                                            Cursor="Hand"
+                                            Margin="0 0 6 0"
+                                            Tag="{Binding IPAddress}"
+                                            Click="TestDevice_Click">
+
+                                                <Button.Template>
+                                                    <ControlTemplate TargetType="Button">
+
+                                                        <Border x:Name="bg"
+                                                        Background="White"
+                                                        CornerRadius="6"
+                                                        BorderThickness="1"
+                                                        BorderBrush="#D8E4F0"
+                                                        Padding="10 5">
+
+                                                            <ContentPresenter HorizontalAlignment="Center"
+                                                                      VerticalAlignment="Center"/>
+
+                                                        </Border>
+
+                                                        <ControlTemplate.Triggers>
+                                                            <Trigger Property="IsMouseOver"
+                                                             Value="True">
+                                                                <Setter TargetName="bg"
+                                                                Property="Background"
+                                                                Value="#EEF3FA"/>
+                                                            </Trigger>
+                                                        </ControlTemplate.Triggers>
+
+                                                    </ControlTemplate>
+                                                </Button.Template>
+
+                                            </Button>
+
+                                            <Button Content="Remove"
+                                            FontSize="11"
+                                            FontFamily="Segoe UI"
+                                            Foreground="#A32D2D"
+                                            Cursor="Hand"
+                                            Tag="{Binding Id}"
+                                            Click="RemoveDevice_Click">
+
+                                                <Button.Template>
+                                                    <ControlTemplate TargetType="Button">
+
+                                                        <Border x:Name="bg"
+                                                        Background="White"
+                                                        CornerRadius="6"
+                                                        BorderThickness="1"
+                                                        BorderBrush="#FCEBEB"
+                                                        Padding="10 5">
+
+                                                            <ContentPresenter HorizontalAlignment="Center"
+                                                                      VerticalAlignment="Center"/>
+
+                                                        </Border>
+
+                                                        <ControlTemplate.Triggers>
+                                                            <Trigger Property="IsMouseOver"
+                                                             Value="True">
+                                                                <Setter TargetName="bg"
+                                                                Property="Background"
+                                                                Value="#FCEBEB"/>
+                                                            </Trigger>
+                                                        </ControlTemplate.Triggers>
+
+                                                    </ControlTemplate>
+                                                </Button.Template>
+
+                                            </Button>
+
+                                        </StackPanel>
+
+                                    </Grid>
+
+                                </Border>
+
+                            </DataTemplate>
+                        </ItemsControl.ItemTemplate>
+
+                    </ItemsControl>
+
+                </ScrollViewer>
+
+                <TextBlock x:Name="TxtNoDevices"
+                   Text="No devices connected yet."
+                   FontSize="12"
+                   Foreground="#8AAAC8"
+                   FontFamily="Segoe UI"
+                   HorizontalAlignment="Center"
+                   Margin="0 20 0 0"
+                   Visibility="Visible"/>
+
+            </StackPanel>
+
+        </Border>
+    </Grid>
+    </ScrollViewer>
+</Window>

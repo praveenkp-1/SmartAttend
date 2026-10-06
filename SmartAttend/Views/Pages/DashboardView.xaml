@@ -1,0 +1,974 @@
+﻿<UserControl x:Class="SmartAttend.View.DashboardView"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             mc:Ignorable="d"
+             Background="#F7F9FC">
+
+    <Grid Margin="22 18 22 22">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="*" />
+        </Grid.RowDefinitions>
+
+        <!-- ═══════════════════════════════
+                 STAT CARDS ROW
+            ═══════════════════════════════ -->
+        <UniformGrid Grid.Row="0"
+                     Rows="1"
+                     Margin="0 0 0 16">
+
+            <!-- Total Employees -->
+            <Border Background="White"
+                    CornerRadius="11"
+                    BorderThickness="1"
+                    BorderBrush="#E4EAF2"
+                    Margin="0 0 7 0"
+                    ClipToBounds="True">
+                <Grid>
+                    <Border Height="3"
+                            VerticalAlignment="Top"
+                            Background="#00C6AE"
+                            CornerRadius="11 11 0 0" />
+                    <StackPanel Margin="18 14 18 14">
+                        <TextBlock Text="Total Employees"
+                                   FontSize="11"
+                                   FontWeight="SemiBold"
+                                   Foreground="#5E708A"
+                                   FontFamily="Segoe UI" />
+                        <TextBlock x:Name="TxtTotalEmployees"
+                                   Text="—"
+                                   FontSize="28"
+                                   FontWeight="Black"
+                                   Foreground="#0D1B2A"
+                                   FontFamily="Segoe UI" />
+                        <TextBlock x:Name="TxtPendingEnrollment"
+                                   Text="Active workforce"
+                                   FontSize="10"
+                                   Foreground="#9EB3CC"
+                                   FontFamily="Segoe UI"
+                                   Margin="0 4 0 0" />
+                    </StackPanel>
+                    <!-- Top-right icon -->
+                    <Border Width="36"
+                            Height="36"
+                            CornerRadius="10"
+                            Background="#DFF6F3"
+                            HorizontalAlignment="Right"
+                            VerticalAlignment="Top"
+                            Margin="0,14,14,0">
+
+                        <Viewbox Margin="8">
+                            <Path Fill="#00C6AE"
+                                  Stretch="Uniform"
+                                  RenderTransformOrigin="0.5,0.5"
+                                  Data="M16 11c1.66 0 2.99-1.34 2.99-3S17.66 5 16 5c-1.66 0-3 1.34-3 3s1.34 3 3 3zm-8 0c1.66 0 2.99-1.34 2.99-3S9.66 5 8 5C6.34 5 5 6.34 5 8s1.34 3 3 3zm0 2c-2.33 0-7 1.17-7 3.5V19h14v-2.5c0-2.33-4.67-3.5-7-3.5zm8 0c-.29 0-.62.02-.97.05 1.16.84 1.97 1.97 1.97 3.45V19h6v-2.5c0-2.33-4.67-3.5-7-3.5z">
+                            </Path>
+                        </Viewbox>
+
+                    </Border>
+                </Grid>
+            </Border>
+
+            <!-- Present Today -->
+            <Border Background="White"
+                    CornerRadius="11"
+                    BorderThickness="1"
+                    BorderBrush="#E4EAF2"
+                    Margin="4 0"
+                    ClipToBounds="True">
+                <Grid>
+                    <Border Height="3"
+                            VerticalAlignment="Top"
+                            Background="#00C6AE"
+                            CornerRadius="11 11 0 0" />
+                    <StackPanel Margin="18 14 18 14">
+                        <TextBlock Text="Present Today"
+                                   FontSize="11"
+                                   FontWeight="SemiBold"
+                                   Foreground="#5E708A"
+                                   FontFamily="Segoe UI" />
+                        <TextBlock x:Name="TxtPresentToday"
+                                   Text="—"
+                                   FontSize="28"
+                                   FontWeight="Black"
+                                   Foreground="#00C6AE"
+                                   FontFamily="Segoe UI" />
+                        <TextBlock x:Name="TxtAttendanceRate"
+                                   Text="0% attendance rate"
+                                   FontSize="10"
+                                   Foreground="#9EB3CC"
+                                   FontFamily="Segoe UI"
+                                   Margin="0 4 0 0" />
+                    </StackPanel>
+                    <!-- Top-right icon -->
+                    <Border Width="36"
+                            Height="36"
+                            CornerRadius="10"
+                            Background="#DFF6F3"
+                            HorizontalAlignment="Right"
+                            VerticalAlignment="Top"
+                            Margin="0,14,14,0">
+
+                        <Viewbox Margin="8">
+                            <Path Fill="#00C6AE"
+                                  Stretch="Uniform"
+                                  RenderTransformOrigin="0.5,0.5"
+                                  Data="M9,16.17 L4.83,12 L3.41,13.41 L9,19 L21,7 L19.59,5.59 L9,16.17 Z">
+                            </Path>
+                        </Viewbox>
+
+                    </Border>
+                </Grid>
+            </Border>
+
+            <!-- Absent Today -->
+            <Border Background="White"
+                    CornerRadius="11"
+                    BorderThickness="1"
+                    BorderBrush="#E4EAF2"
+                    Margin="4 0"
+                    ClipToBounds="True">
+                <Grid>
+                    <Border Height="3"
+                            VerticalAlignment="Top"
+                            Background="#FF5A5A"
+                            CornerRadius="11 11 0 0" />
+                    <StackPanel Margin="18 14 18 14">
+                        <TextBlock Text="Absent Today"
+                                   FontSize="11"
+                                   FontWeight="SemiBold"
+                                   Foreground="#5E708A"
+                                   FontFamily="Segoe UI" />
+                        <TextBlock x:Name="TxtAbsentToday"
+                                   Text="—"
+                                   FontSize="28"
+                                   FontWeight="Black"
+                                   Foreground="#FF5A5A"
+                                   FontFamily="Segoe UI" />
+                        <TextBlock x:Name="TxtOnLeave"
+                                   Text="0 on approved leave"
+                                   FontSize="10"
+                                   Foreground="#9EB3CC"
+                                   FontFamily="Segoe UI"
+                                   Margin="0 4 0 0" />
+                    </StackPanel>
+                    <!-- Top-right icon -->
+                    <Border Width="36"
+                            Height="36"
+                            CornerRadius="10"
+                            Background="#1AFF5A5A"
+                            HorizontalAlignment="Right"
+                            VerticalAlignment="Top"
+                            Margin="0,14,14,0">
+
+                        <Viewbox Margin="8">
+                            <Path Fill="#FF5A5A"
+                                  Stretch="Uniform"
+                                  RenderTransformOrigin="0.5,0.5"
+                                  Data="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm1 15h-2v-2h2v2zm0-4h-2V7h2v6z">
+                            </Path>
+                        </Viewbox>
+
+                    </Border>
+                </Grid>
+            </Border>
+
+            <!-- Late Arrivals -->
+            <Border Background="White"
+                    CornerRadius="11"
+                    BorderThickness="1"
+                    BorderBrush="#E4EAF2"
+                    Margin="7 0 0 0"
+                    ClipToBounds="True">
+                <Grid>
+                    <Border Height="3"
+                            VerticalAlignment="Top"
+                            Background="#F59E0B"
+                            CornerRadius="11 11 0 0" />
+                    <StackPanel Margin="18 14 18 14">
+                        <TextBlock Text="Late Arrivals"
+                                   FontSize="11"
+                                   FontWeight="SemiBold"
+                                   Foreground="#5E708A"
+                                   FontFamily="Segoe UI" />
+                        <TextBlock x:Name="TxtLateToday"
+                                   Text="—"
+                                   FontSize="28"
+                                   FontWeight="Black"
+                                   Foreground="#F59E0B"
+                                   FontFamily="Segoe UI" />
+                        <TextBlock x:Name="TxtWorkStart"
+                                   Text="After 09:00 AM cutoff"
+                                   FontSize="10"
+                                   Foreground="#9EB3CC"
+                                   FontFamily="Segoe UI"
+                                   Margin="0 4 0 0" />
+                    </StackPanel>
+                    <!-- Top-right icon -->
+                    <Border Width="36"
+                            Height="36"
+                            CornerRadius="10"
+                            Background="#1AF59E0B"
+                            HorizontalAlignment="Right"
+                            VerticalAlignment="Top"
+                            Margin="0,14,14,0">
+
+                        <Viewbox Margin="8">
+                            <Path Fill="#F59E0B"
+                                  Stretch="Uniform"
+                                  RenderTransformOrigin="0.5,0.5"
+                                  Data="M11.99 2C6.47 2 2 6.48 2 12s4.47 10 9.99 10C17.52 22 22 17.52 22 12S17.52 2 11.99 2zM12 20c-4.42 0-8-3.58-8-8s3.58-8 8-8 8 3.58 8 8-3.58 8-8 8zm.5-13H11v6l5.25 3.15.75-1.23-4.5-2.67V7z">
+                            </Path>
+                        </Viewbox>
+
+                    </Border>
+                </Grid>
+            </Border>
+
+        </UniformGrid>
+
+        <!-- ═══════════════════════════════
+                 MAIN GRID: LEFT + RIGHT
+            ═══════════════════════════════ -->
+        <Grid Grid.Row="1">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="*" />
+                <ColumnDefinition Width="300" />
+            </Grid.ColumnDefinitions>
+
+            <!-- ══ LEFT: Today's Attendance table ══ -->
+            <Border Grid.Column="0"
+                    Background="White"
+                    CornerRadius="11"
+                    BorderThickness="1"
+                    BorderBrush="#E4EAF2"
+                    Margin="0 0 14 10">
+                <Grid>
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="Auto" />
+                        <RowDefinition Height="*" />
+                    </Grid.RowDefinitions>
+
+                    <!-- Card header -->
+                    <Border Grid.Row="0"
+                            BorderThickness="0 0 0 1"
+                            BorderBrush="#E4EAF2"
+                            Padding="18 13">
+                        <Grid>
+                            <StackPanel Orientation="Horizontal"
+                                        VerticalAlignment="Center">
+                                <TextBlock Text="Today's Attendance"
+                                           FontSize="13"
+                                           FontWeight="Bold"
+                                           Foreground="#0D1B2A"
+                                           FontFamily="Segoe UI" />
+                            </StackPanel>
+                            <StackPanel Orientation="Horizontal"
+                                        HorizontalAlignment="Right"
+                                        VerticalAlignment="Center">
+                                <!-- LIVE chip -->
+                                <Border Background="#DFF6F3"
+                                        CornerRadius="5"
+                                        Padding="8 3"
+                                        Margin="0 0 10 0">
+                                    <StackPanel Orientation="Horizontal">
+                                        <Ellipse Width="5"
+                                                 Height="5"
+                                                 Fill="#00C6AE"
+                                                 VerticalAlignment="Center"
+                                                 Margin="0 0 5 0" />
+                                        <TextBlock Text="LIVE"
+                                                   FontSize="10"
+                                                   FontWeight="Bold"
+                                                   Foreground="#00C6AE"
+                                                   FontFamily="Segoe UI" />
+                                    </StackPanel>
+                                </Border>
+                                <TextBlock x:Name="TxtTodayDate"
+                                           Text="—"
+                                           FontSize="12"
+                                           Foreground="#9EB3CC"
+                                           FontFamily="Segoe UI"
+                                           VerticalAlignment="Center" />
+                            </StackPanel>
+                        </Grid>
+                    </Border>
+
+                    <!-- Attendance DataGrid -->
+                    <DataGrid x:Name="DashboardAttendanceGrid"
+                              Grid.Row="1"
+                              VerticalAlignment="Stretch"
+                              ScrollViewer.VerticalScrollBarVisibility="Hidden"
+                              ScrollViewer.HorizontalScrollBarVisibility="Disabled"
+                              AutoGenerateColumns="False"
+                              GridLinesVisibility="Horizontal"
+                              HorizontalGridLinesBrush="#F0F4F8"
+                              VerticalGridLinesBrush="Transparent"
+                              HeadersVisibility="Column"
+                              BorderThickness="0"
+                              Background="Transparent"
+                              RowBackground="White"
+                              FontFamily="Segoe UI"
+                              FontSize="12"
+                              Foreground="#0D1B2A"
+                              CanUserResizeRows="False"
+                              CanUserResizeColumns="False"
+                              CanUserSortColumns="False"
+                              SelectionMode="Single"
+                              IsReadOnly="True"
+                              ColumnHeaderHeight="36"
+                              RowHeight="48"
+                              RowHeaderWidth="0">
+                        <DataGrid.Resources>
+                            <Style TargetType="ScrollBar">
+                                <Setter Property="Visibility"
+                                        Value="Collapsed" />
+                            </Style>
+                        </DataGrid.Resources>
+
+                        <DataGrid.ColumnHeaderStyle>
+                            <Style TargetType="DataGridColumnHeader">
+                                <Setter Property="Background"
+                                        Value="#FAFBFD" />
+                                <Setter Property="Foreground"
+                                        Value="#9EB3CC" />
+                                <Setter Property="FontSize"
+                                        Value="10.5" />
+                                <Setter Property="FontWeight"
+                                        Value="SemiBold" />
+                                <Setter Property="Padding"
+                                        Value="14 0" />
+                                <Setter Property="BorderThickness"
+                                        Value="0 0 0 1" />
+                                <Setter Property="BorderBrush"
+                                        Value="#E4EAF2" />
+                            </Style>
+                        </DataGrid.ColumnHeaderStyle>
+
+                        <DataGrid.CellStyle>
+                            <Style TargetType="DataGridCell">
+                                <Setter Property="Background"
+                                        Value="Transparent" />
+                                <Setter Property="BorderThickness"
+                                        Value="0" />
+                                <Setter Property="FocusVisualStyle"
+                                        Value="{x:Null}" />
+                                <Setter Property="Template">
+                                    <Setter.Value>
+                                        <ControlTemplate TargetType="DataGridCell">
+                                            <Border Background="{TemplateBinding Background}">
+                                                <ContentPresenter VerticalAlignment="Center" />
+                                            </Border>
+                                        </ControlTemplate>
+                                    </Setter.Value>
+                                </Setter>
+                                <Style.Triggers>
+                                    <Trigger Property="IsSelected"
+                                             Value="True">
+                                        <Setter Property="Background"
+                                                Value="#F0F4F8" />
+                                        <Setter Property="Foreground"
+                                                Value="#0D1B2A" />
+                                    </Trigger>
+                                </Style.Triggers>
+                            </Style>
+                        </DataGrid.CellStyle>
+
+
+                        <DataGrid.Columns>
+
+                            <!-- Employee -->
+                            <DataGridTemplateColumn Header="EMPLOYEE"
+                                                    Width="*">
+                                <DataGridTemplateColumn.CellTemplate>
+                                    <DataTemplate>
+                                        <StackPanel Orientation="Horizontal"
+                                                    Margin="14 0"
+                                                    VerticalAlignment="Center">
+                                            <Border Width="30"
+                                                    Height="30"
+                                                    CornerRadius="8"
+                                                    Background="{Binding AvatarColor}"
+                                                    Margin="0 0 10 0"
+                                                    VerticalAlignment="Center">
+                                                <TextBlock Text="{Binding Initials}"
+                                                           FontSize="10"
+                                                           FontWeight="Bold"
+                                                           FontFamily="Segoe UI"
+                                                           Foreground="{Binding AvatarTextColor}"
+                                                           HorizontalAlignment="Center"
+                                                           VerticalAlignment="Center" />
+                                            </Border>
+                                            <StackPanel VerticalAlignment="Center">
+                                                <TextBlock Text="{Binding Name}"
+                                                           FontSize="12"
+                                                           FontWeight="SemiBold"
+                                                           Foreground="#0D1B2A"
+                                                           FontFamily="Segoe UI" />
+                                                <TextBlock Text="{Binding UserId}"
+                                                           FontSize="10"
+                                                           Foreground="#9EB3CC"
+                                                           FontFamily="Segoe UI"
+                                                           Margin="0 2 0 0" />
+                                            </StackPanel>
+                                        </StackPanel>
+                                    </DataTemplate>
+                                </DataGridTemplateColumn.CellTemplate>
+                            </DataGridTemplateColumn>
+
+                            <!-- Check In -->
+                            <DataGridTemplateColumn Header="CHECK IN"
+                                                    Width="90">
+                                <DataGridTemplateColumn.CellTemplate>
+                                    <DataTemplate>
+                                        <TextBlock Text="{Binding CheckIn}"
+                                                   FontSize="12"
+                                                   Foreground="#0D1B2A"
+                                                   FontFamily="Segoe UI"
+                                                   Margin="14 0"
+                                                   VerticalAlignment="Center" />
+                                    </DataTemplate>
+                                </DataGridTemplateColumn.CellTemplate>
+                            </DataGridTemplateColumn>
+
+                            <!-- Check Out -->
+                            <DataGridTemplateColumn Header="CHECK OUT"
+                                                    Width="90">
+                                <DataGridTemplateColumn.CellTemplate>
+                                    <DataTemplate>
+                                        <TextBlock Text="{Binding CheckOut}"
+                                                   FontSize="12"
+                                                   Foreground="#0D1B2A"
+                                                   FontFamily="Segoe UI"
+                                                   Margin="14 0"
+                                                   VerticalAlignment="Center" />
+                                    </DataTemplate>
+                                </DataGridTemplateColumn.CellTemplate>
+                            </DataGridTemplateColumn>
+
+                            <!-- Status -->
+                            <DataGridTemplateColumn Header="STATUS"
+                                                    Width="100">
+                                <DataGridTemplateColumn.CellTemplate>
+                                    <DataTemplate>
+                                        <Border Margin="14 0"
+                                                CornerRadius="5"
+                                                Padding="8 3"
+                                                HorizontalAlignment="Left"
+                                                VerticalAlignment="Center">
+                                            <Border.Style>
+                                                <Style TargetType="Border">
+                                                    <Setter Property="Background"
+                                                            Value="#D0F5F0" />
+                                                    <Style.Triggers>
+                                                        <DataTrigger Binding="{Binding Status}"
+                                                                     Value="Late">
+                                                            <Setter Property="Background"
+                                                                    Value="#FEF3D0" />
+                                                        </DataTrigger>
+                                                        <DataTrigger Binding="{Binding Status}"
+                                                                     Value="Absent">
+                                                            <Setter Property="Background"
+                                                                    Value="#FFE5E5" />
+                                                        </DataTrigger>
+                                                        <DataTrigger Binding="{Binding Status}"
+                                                                     Value="Checked Out">
+                                                            <Setter Property="Background"
+                                                                    Value="#E8EDF5" />
+                                                        </DataTrigger>
+                                                    </Style.Triggers>
+                                                </Style>
+                                            </Border.Style>
+                                            <TextBlock Text="{Binding Status}"
+                                                       FontSize="10"
+                                                       FontWeight="SemiBold"
+                                                       FontFamily="Segoe UI">
+                                                <TextBlock.Style>
+                                                    <Style TargetType="TextBlock">
+                                                        <Setter Property="Foreground"
+                                                                Value="#007d6e" />
+                                                        <Style.Triggers>
+                                                            <DataTrigger Binding="{Binding Status}"
+                                                                         Value="Late">
+                                                                <Setter Property="Foreground"
+                                                                        Value="#92400e" />
+                                                            </DataTrigger>
+                                                            <DataTrigger Binding="{Binding Status}"
+                                                                         Value="Absent">
+                                                                <Setter Property="Foreground"
+                                                                        Value="#cc2a2a" />
+                                                            </DataTrigger>
+                                                            <DataTrigger Binding="{Binding Status}"
+                                                                         Value="Checked Out">
+                                                                <Setter Property="Foreground"
+                                                                        Value="#1E3A5F" />
+                                                            </DataTrigger>
+                                                        </Style.Triggers>
+                                                    </Style>
+                                                </TextBlock.Style>
+                                            </TextBlock>
+                                        </Border>
+                                    </DataTemplate>
+                                </DataGridTemplateColumn.CellTemplate>
+                            </DataGridTemplateColumn>
+
+                            <!-- Method -->
+                            <DataGridTemplateColumn Header="METHOD"
+                                                    Width="100">
+                                <DataGridTemplateColumn.CellTemplate>
+                                    <DataTemplate>
+                                        <Border Margin="14 0"
+                                                CornerRadius="5"
+                                                Padding="8 3"
+                                                HorizontalAlignment="Left"
+                                                VerticalAlignment="Center">
+                                            <Border.Style>
+                                                <Style TargetType="Border">
+                                                    <Setter Property="Background"
+                                                            Value="#EDE9FF" />
+                                                    <Style.Triggers>
+                                                        <DataTrigger Binding="{Binding Method}"
+                                                                     Value="RFID">
+                                                            <Setter Property="Background"
+                                                                    Value="#DBEAFE" />
+                                                        </DataTrigger>
+                                                        <DataTrigger Binding="{Binding Method}"
+                                                                     Value="PIN">
+                                                            <Setter Property="Background"
+                                                                    Value="#FEF3D0" />
+                                                        </DataTrigger>
+                                                    </Style.Triggers>
+                                                </Style>
+                                            </Border.Style>
+                                            <TextBlock Text="{Binding Method}"
+                                                       FontSize="10"
+                                                       FontWeight="SemiBold"
+                                                       FontFamily="Segoe UI">
+                                                <TextBlock.Style>
+                                                    <Style TargetType="TextBlock">
+                                                        <Setter Property="Foreground"
+                                                                Value="#6d28d9" />
+                                                        <Style.Triggers>
+                                                            <DataTrigger Binding="{Binding Method}"
+                                                                         Value="RFID">
+                                                                <Setter Property="Foreground"
+                                                                        Value="#1d4ed8" />
+                                                            </DataTrigger>
+                                                            <DataTrigger Binding="{Binding Method}"
+                                                                         Value="PIN">
+                                                                <Setter Property="Foreground"
+                                                                        Value="#92400e" />
+                                                            </DataTrigger>
+                                                        </Style.Triggers>
+                                                    </Style>
+                                                </TextBlock.Style>
+                                            </TextBlock>
+                                        </Border>
+                                    </DataTemplate>
+                                </DataGridTemplateColumn.CellTemplate>
+                            </DataGridTemplateColumn>
+
+                        </DataGrid.Columns>
+                    </DataGrid>
+                </Grid>
+            </Border>
+
+            <!-- ══ RIGHT COLUMN ══ -->
+            <Grid Grid.Column="1"
+                  Margin="0 0 0 10">
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto" />
+                    <RowDefinition Height="*" />
+                </Grid.RowDefinitions>
+
+                <!-- Weekly Presence -->
+                <Border Grid.Row="0"
+                        Background="White"
+                        CornerRadius="11"
+                        BorderThickness="1"
+                        BorderBrush="#E4EAF2"
+                        Margin="0 0 0 14"
+                        Padding="18 14">
+                    <StackPanel>
+                        <Grid Margin="0 0 0 14">
+                            <TextBlock Text="Weekly Presence"
+                                       FontSize="13"
+                                       FontWeight="Bold"
+                                       Foreground="#0D1B2A"
+                                       FontFamily="Segoe UI" />
+                            <TextBlock Text="This week"
+                                       FontSize="11"
+                                       Foreground="#9EB3CC"
+                                       FontFamily="Segoe UI"
+                                       HorizontalAlignment="Right"
+                                       VerticalAlignment="Center" />
+                        </Grid>
+
+                        <!-- Monday -->
+                        <Grid Margin="0 0 0 9">
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="72" />
+                                <ColumnDefinition Width="*" />
+                                <ColumnDefinition Width="36" />
+                            </Grid.ColumnDefinitions>
+                            <TextBlock Text="Monday"
+                                       FontSize="11"
+                                       Foreground="#5E708A"
+                                       FontFamily="Segoe UI"
+                                       VerticalAlignment="Center" />
+                            <Border x:Name="BarMonContainer"
+                                    Grid.Column="1"
+                                    Background="#F0F4F8"
+                                    CornerRadius="4"
+                                    Height="7"
+                                    VerticalAlignment="Center"
+                                    Margin="0 0 8 0">
+                                <Border x:Name="BarMon"
+                                        Background="#00C6AE"
+                                        CornerRadius="4"
+                                        HorizontalAlignment="Left"
+                                        Width="0" />
+                            </Border>
+                            <TextBlock x:Name="TxtMon"
+                                       Grid.Column="2"
+                                       Text="0%"
+                                       FontSize="11"
+                                       Foreground="#5E708A"
+                                       FontFamily="Segoe UI" />
+                        </Grid>
+
+                        <!-- Tuesday -->
+                        <Grid Margin="0 0 0 9">
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="72" />
+                                <ColumnDefinition Width="*" />
+                                <ColumnDefinition Width="36" />
+                            </Grid.ColumnDefinitions>
+                            <TextBlock Text="Tuesday"
+                                       FontSize="11"
+                                       Foreground="#5E708A"
+                                       FontFamily="Segoe UI"
+                                       VerticalAlignment="Center" />
+                            <Border x:Name="BarTueContainer"
+                                    Grid.Column="1"
+                                    Background="#F0F4F8"
+                                    CornerRadius="4"
+                                    Height="7"
+                                    VerticalAlignment="Center"
+                                    Margin="0 0 8 0">
+                                <Border x:Name="BarTue"
+                                        Background="#00C6AE"
+                                        CornerRadius="4"
+                                        HorizontalAlignment="Left"
+                                        Width="0" />
+                            </Border>
+                            <TextBlock x:Name="TxtTue"
+                                       Grid.Column="2"
+                                       Text="0%"
+                                       FontSize="11"
+                                       Foreground="#5E708A"
+                                       FontFamily="Segoe UI" />
+                        </Grid>
+
+                        <!-- Wednesday -->
+                        <Grid Margin="0 0 0 9">
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="72" />
+                                <ColumnDefinition Width="*" />
+                                <ColumnDefinition Width="36" />
+                            </Grid.ColumnDefinitions>
+                            <TextBlock Text="Wednesday"
+                                       FontSize="11"
+                                       Foreground="#5E708A"
+                                       FontFamily="Segoe UI"
+                                       VerticalAlignment="Center" />
+                            <Border x:Name="BarWedContainer"
+                                    Grid.Column="1"
+                                    Background="#F0F4F8"
+                                    CornerRadius="4"
+                                    Height="7"
+                                    VerticalAlignment="Center"
+                                    Margin="0 0 8 0">
+                                <Border x:Name="BarWed"
+                                        Background="#00C6AE"
+                                        CornerRadius="4"
+                                        HorizontalAlignment="Left"
+                                        Width="0" />
+                            </Border>
+                            <TextBlock x:Name="TxtWed"
+                                       Grid.Column="2"
+                                       Text="0%"
+                                       FontSize="11"
+                                       Foreground="#5E708A"
+                                       FontFamily="Segoe UI" />
+                        </Grid>
+
+                        <!-- Thursday -->
+                        <Grid Margin="0 0 0 9">
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="72" />
+                                <ColumnDefinition Width="*" />
+                                <ColumnDefinition Width="36" />
+                            </Grid.ColumnDefinitions>
+                            <TextBlock Text="Thursday"
+                                       FontSize="11"
+                                       Foreground="#5E708A"
+                                       FontFamily="Segoe UI"
+                                       VerticalAlignment="Center" />
+                            <Border x:Name="BarThuContainer"
+                                    Grid.Column="1"
+                                    Background="#F0F4F8"
+                                    CornerRadius="4"
+                                    Height="7"
+                                    VerticalAlignment="Center"
+                                    Margin="0 0 8 0">
+                                <Border x:Name="BarThu"
+                                        Background="#00C6AE"
+                                        CornerRadius="4"
+                                        HorizontalAlignment="Left"
+                                        Width="0" />
+                            </Border>
+                            <TextBlock x:Name="TxtThu"
+                                       Grid.Column="2"
+                                       Text="0%"
+                                       FontSize="11"
+                                       Foreground="#5E708A"
+                                       FontFamily="Segoe UI" />
+                        </Grid>
+
+                        <!-- Friday -->
+                        <Grid Margin="0 0 0 9">
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="72" />
+                                <ColumnDefinition Width="*" />
+                                <ColumnDefinition Width="36" />
+                            </Grid.ColumnDefinitions>
+                            <TextBlock Text="Friday"
+                                       FontSize="11"
+                                       Foreground="#5E708A"
+                                       FontFamily="Segoe UI"
+                                       VerticalAlignment="Center" />
+                            <Border x:Name="BarFriContainer"
+                                    Grid.Column="1"
+                                    Background="#F0F4F8"
+                                    CornerRadius="4"
+                                    Height="7"
+                                    VerticalAlignment="Center"
+                                    Margin="0 0 8 0">
+                                <Border x:Name="BarFri"
+                                        Background="#00C6AE"
+                                        CornerRadius="4"
+                                        HorizontalAlignment="Left"
+                                        Width="0" />
+                            </Border>
+                            <TextBlock x:Name="TxtFri"
+                                       Grid.Column="2"
+                                       Text="0%"
+                                       FontSize="11"
+                                       Foreground="#5E708A"
+                                       FontFamily="Segoe UI" />
+                        </Grid>
+
+                        <!-- Saturday -->
+                        <Grid Margin="0 0 0 9">
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="72" />
+                                <ColumnDefinition Width="*" />
+                                <ColumnDefinition Width="36" />
+                            </Grid.ColumnDefinitions>
+                            <TextBlock Text="Saturday"
+                                       FontSize="11"
+                                       Foreground="#5E708A"
+                                       FontFamily="Segoe UI"
+                                       VerticalAlignment="Center" />
+                            <Border x:Name="BarSatContainer"
+                                    Grid.Column="1"
+                                    Background="#F0F4F8"
+                                    CornerRadius="4"
+                                    Height="7"
+                                    VerticalAlignment="Center"
+                                    Margin="0 0 8 0">
+                                <Border x:Name="BarSat"
+                                        Background="#00C6AE"
+                                        CornerRadius="4"
+                                        HorizontalAlignment="Left"
+                                        Width="0" />
+                            </Border>
+                            <TextBlock x:Name="TxtSat"
+                                       Grid.Column="2"
+                                       Text="0%"
+                                       FontSize="11"
+                                       Foreground="#5E708A"
+                                       FontFamily="Segoe UI" />
+                        </Grid>
+
+                        <!-- Sunday -->
+                        <Grid>
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="72" />
+                                <ColumnDefinition Width="*" />
+                                <ColumnDefinition Width="36" />
+                            </Grid.ColumnDefinitions>
+                            <TextBlock Text="Sunday"
+                                       FontSize="11"
+                                       Foreground="#5E708A"
+                                       FontFamily="Segoe UI"
+                                       VerticalAlignment="Center" />
+                            <Border x:Name="BarSunContainer"
+                                    Grid.Column="1"
+                                    Background="#F0F4F8"
+                                    CornerRadius="4"
+                                    Height="7"
+                                    VerticalAlignment="Center"
+                                    Margin="0 0 8 0">
+                                <Border x:Name="BarSun"
+                                        Background="#00C6AE"
+                                        CornerRadius="4"
+                                        HorizontalAlignment="Left"
+                                        Width="0" />
+                            </Border>
+                            <TextBlock x:Name="TxtSun"
+                                       Grid.Column="2"
+                                       Text="0%"
+                                       FontSize="11"
+                                       Foreground="#5E708A"
+                                       FontFamily="Segoe UI" />
+                        </Grid>
+
+                    </StackPanel>
+                </Border>
+
+                <!-- Live Activity Feed -->
+                <Border Grid.Row="1"
+                        Background="White"
+                        CornerRadius="11"
+                        BorderThickness="1"
+                        BorderBrush="#E4EAF2">
+                    <Grid>
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="Auto" />
+                            <RowDefinition Height="*" />
+                        </Grid.RowDefinitions>
+
+                        <!-- Feed header -->
+                        <Border Grid.Row="0"
+                                BorderThickness="0 0 0 1"
+                                BorderBrush="#E4EAF2"
+                                Padding="18 13">
+                            <Grid>
+                                <TextBlock Text="Live Activity"
+                                           FontSize="13"
+                                           FontWeight="Bold"
+                                           Foreground="#0D1B2A"
+                                           FontFamily="Segoe UI" />
+                                <Border HorizontalAlignment="Right"
+                                        Background="#DFF6F3"
+                                        CornerRadius="5"
+                                        Padding="8 3"
+                                        VerticalAlignment="Center">
+                                    <StackPanel Orientation="Horizontal">
+                                        <Ellipse Width="5"
+                                                 Height="5"
+                                                 Fill="#00C6AE"
+                                                 VerticalAlignment="Center"
+                                                 Margin="0 0 5 0" />
+                                        <TextBlock Text="LIVE"
+                                                   FontSize="10"
+                                                   FontWeight="Bold"
+                                                   Foreground="#00C6AE"
+                                                   FontFamily="Segoe UI" />
+                                    </StackPanel>
+                                </Border>
+                            </Grid>
+                        </Border>
+
+                        <ScrollViewer Grid.Row="1"
+                                      VerticalScrollBarVisibility="Auto"
+                                      HorizontalScrollBarVisibility="Disabled">
+                            <ItemsControl x:Name="LiveActivityList"
+                                          ItemsSource="{Binding RecentCheckIns}">
+                                <ItemsControl.ItemTemplate>
+                                    <DataTemplate>
+                                        <StackPanel>
+                                            <Grid Margin="18 10">
+                                                <Grid.ColumnDefinitions>
+                                                    <ColumnDefinition Width="Auto" />
+                                                    <ColumnDefinition Width="*" />
+                                                    <ColumnDefinition Width="Auto" />
+                                                </Grid.ColumnDefinitions>
+                                                <Border Width="30"
+                                                        Height="30"
+                                                        CornerRadius="8"
+                                                        Margin="0 0 10 0">
+                                                    <Border.Background>
+                                                        <SolidColorBrush Color="{Binding AvatarColor}" />
+                                                    </Border.Background>
+                                                    <TextBlock Text="{Binding Initials}"
+                                                               FontSize="10"
+                                                               FontWeight="Bold"
+                                                               FontFamily="Segoe UI"
+                                                               HorizontalAlignment="Center"
+                                                               VerticalAlignment="Center">
+                                                        <TextBlock.Foreground>
+                                                            <SolidColorBrush Color="{Binding AvatarTextColor}" />
+                                                        </TextBlock.Foreground>
+                                                    </TextBlock>
+                                                </Border>
+                                                <StackPanel Grid.Column="1"
+                                                            VerticalAlignment="Center">
+                                                    <TextBlock Text="{Binding Name}"
+                                                               FontSize="12"
+                                                               FontWeight="SemiBold"
+                                                               Foreground="#0D1B2A"
+                                                               FontFamily="Segoe UI" />
+                                                    <StackPanel Orientation="Horizontal"
+                                                                Margin="0 1 0 0">
+                                                        <TextBlock Text="{Binding Check}"
+                                                                   FontSize="10"
+                                                                   Foreground="#9EB3CC"
+                                                                   FontFamily="Segoe UI" />
+                                                        <TextBlock Text=" · "
+                                                                   FontSize="10"
+                                                                   Foreground="#9EB3CC"
+                                                                   FontFamily="Segoe UI" />
+                                                        <TextBlock Text="{Binding Method}"
+                                                                   FontSize="10"
+                                                                   Foreground="#9EB3CC"
+                                                                   FontFamily="Segoe UI" />
+                                                        <TextBlock Text=" · "
+                                                                   FontSize="10"
+                                                                   Foreground="#9EB3CC"
+                                                                   FontFamily="Segoe UI" />
+                                                        <TextBlock Text="{Binding Status}"
+                                                                   FontSize="10"
+                                                                   Foreground="#9EB3CC"
+                                                                   FontFamily="Segoe UI" />
+                                                    </StackPanel>
+                                                </StackPanel>
+                                                <TextBlock Text="{Binding Time}"
+                                                           Grid.Column="2"
+                                                           FontSize="10"
+                                                           Foreground="#9EB3CC"
+                                                           FontFamily="Segoe UI"
+                                                           VerticalAlignment="Center" />
+                                            </Grid>
+                                            <Border Height="1"
+                                                    Background="#F0F4F8"
+                                                    Margin="18 0" />
+                                        </StackPanel>
+                                    </DataTemplate>
+                                </ItemsControl.ItemTemplate>
+                            </ItemsControl>
+                        </ScrollViewer>
+                    </Grid>
+                </Border>
+
+            </Grid>
+
+        </Grid>
+
+    </Grid>
+
+</UserControl>
